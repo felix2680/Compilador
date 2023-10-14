@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 
-public class Archivo {
+public class ManejadorArchivo {
 
     private static final String RUTA_ARCHIVO = "src/com/manejadorArchivoTexto/codigo.txt";
 

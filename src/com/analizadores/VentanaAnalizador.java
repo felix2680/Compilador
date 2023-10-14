@@ -1,6 +1,6 @@
 package com.analizadores;
 
-import com.manejadorArchivoTexto.Archivo;
+import com.manejadorArchivoTexto.ManejadorArchivo;
 import com.clases.NumeroLinea;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -100,7 +100,7 @@ public class VentanaAnalizador extends JFrame {
         if (e.getSource() == btnAnalizar) {
             eliminarDatosTabla();
             if (areaCodigo.getText().isEmpty()) {
-                areaCodigo.setText(Archivo.leerArchivo());
+                areaCodigo.setText(ManejadorArchivo.leerArchivo());
             }
             analizar();
             llenarTabla(listaLexemas);
@@ -110,7 +110,7 @@ public class VentanaAnalizador extends JFrame {
             areaCodigo.setText("");
         }
         if (e.getSource() == btnAbrir) {
-            Archivo.abrirArchivo();
+            ManejadorArchivo.abrirArchivo();
         }
     }
 
