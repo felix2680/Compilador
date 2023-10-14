@@ -3,7 +3,7 @@ package com.analizadores;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Gramatica {
+public class AnalizadorLexico {
 
     private static final String PALABRAS_RESERVADAS[] = {"int", "float", "String", "char", "double", "else",
         "while", "for", "break", "if", "return", "void"};

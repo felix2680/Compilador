@@ -122,13 +122,12 @@ public class VentanaAnalizador extends JFrame {
 
         while (tokens.hasMoreTokens()) {
             Lexema lexema = new Lexema();
-            lexema = Gramatica.identificarToken(tokens.nextToken(), lexema);
+            lexema = AnalizadorLexico.identificarToken(tokens.nextToken(), lexema);
             // Si se identifica un lexema, agregarlo a la lista de lexemas
             if (lexema != null) {
                 listaLexemas.add(lexema);
             }
         }
-
     }
 
     public void llenarTabla(ArrayList<Lexema> lexemas) {
