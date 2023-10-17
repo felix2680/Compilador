@@ -104,10 +104,12 @@ public class VentanaAnalizador extends JFrame {
             }
             analizar();
             llenarTabla(listaLexemas);
+            
         }
         if (e.getSource() == btnLimpiar) {
             eliminarDatosTabla();
             areaCodigo.setText("");
+            areaRespuesta.setText("");
         }
         if (e.getSource() == btnAbrir) {
             ManejadorArchivo.abrirArchivo();
@@ -127,6 +129,13 @@ public class VentanaAnalizador extends JFrame {
             if (lexema != null) {
                 listaLexemas.add(lexema);
             }
+        }
+        try{
+            AnalizadorSintactico a = new AnalizadorSintactico();
+            a.analizar(listaLexemas);
+            areaRespuesta.setText("Es una cadena valida");
+        }catch(AnalizadorSintactico.GrammarException e){
+            areaRespuesta.setText("Cadena con errores sintacticos");
         }
     }
 
