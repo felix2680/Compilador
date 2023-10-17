@@ -183,7 +183,7 @@ public class AnalizadorSintactico {
     class GrammarException extends Exception {
 
         public GrammarException() {
-            super("Cadena no válida");
+            super("El código tiene errores sintácticos");
         }
     }
 
