@@ -2,9 +2,10 @@ package com.analizadores;
 
 import com.manejadorArchivoTexto.ManejadorArchivo;
 import com.clases.NumeroLinea;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -15,6 +16,8 @@ import javax.swing.table.DefaultTableModel;
 
 public class VentanaAnalizador extends JFrame {
 
+    private ArrayList<Lexema> listaLexemas;
+
     public final int ANCHO_VENTANA = 855, ALTO_VENTANA = 700;
     private JTextArea areaCodigo, areaRespuesta;
     private final JScrollPane scrollAreaCodigo, scrollAreaRespuesta;
@@ -22,7 +25,6 @@ public class VentanaAnalizador extends JFrame {
     private JButton btnAnalizar, btnLimpiar, btnAbrir;
     private final JTable tabla;
     private final DefaultTableModel modeloTabla;
-    private final ArrayList<Lexema> listaLexemas;
     private NumeroLinea numLinea;
 
     public VentanaAnalizador() {
@@ -102,40 +104,25 @@ public class VentanaAnalizador extends JFrame {
             if (areaCodigo.getText().isEmpty()) {
                 areaCodigo.setText(ManejadorArchivo.leerArchivo());
             }
-            analizar();
+            listaLexemas = AnalizadorLexico.analizar(areaCodigo.getText());
             llenarTabla(listaLexemas);
-            
-        }
-        if (e.getSource() == btnLimpiar) {
+            try {
+                AnalizadorSintactico a = new AnalizadorSintactico();
+                a.analizar(listaLexemas);
+                areaRespuesta.setForeground(Color.decode("#0e822c"));
+                areaRespuesta.setFont(new Font("Arial", Font.BOLD, 15));
+                areaRespuesta.setText("El codigo es válido");
+            } catch (AnalizadorSintactico.GrammarException ex) {
+                areaRespuesta.setForeground(Color.red);
+                areaRespuesta.setFont(new Font("Arial", Font.BOLD, 15));
+                areaRespuesta.setText(ex.getMessage());
+            }
+        } else if (e.getSource() == btnLimpiar) {
             eliminarDatosTabla();
             areaCodigo.setText("");
             areaRespuesta.setText("");
-        }
-        if (e.getSource() == btnAbrir) {
+        } else if (e.getSource() == btnAbrir) {
             ManejadorArchivo.abrirArchivo();
-        }
-    }
-
-    public void analizar() {
-        //Elimina todos los elementos del analizis anterior
-        String delimitadores = "\s|\n|\t|(|)|{|}|[|]|;|\"|,|+|-";
-        String palabra = areaCodigo.getText();
-        StringTokenizer tokens = new StringTokenizer(palabra, delimitadores, true);
-
-        while (tokens.hasMoreTokens()) {
-            Lexema lexema = new Lexema();
-            lexema = AnalizadorLexico.identificarToken(tokens.nextToken(), lexema);
-            // Si se identifica un lexema, agregarlo a la lista de lexemas
-            if (lexema != null) {
-                listaLexemas.add(lexema);
-            }
-        }
-        try{
-            AnalizadorSintactico a = new AnalizadorSintactico();
-            a.analizar(listaLexemas);
-            areaRespuesta.setText("Es una cadena valida");
-        }catch(AnalizadorSintactico.GrammarException e){
-            areaRespuesta.setText("Cadena con errores sintacticos");
         }
     }
 
@@ -143,7 +130,6 @@ public class VentanaAnalizador extends JFrame {
         // Añade las nuevas filas al modelo
         for (Lexema lexema : lexemas) {
             modeloTabla.addRow(new Object[]{lexema.getLexema(), lexema.getDescripcion(), lexema.getToken()});
-
         }
     }
 
