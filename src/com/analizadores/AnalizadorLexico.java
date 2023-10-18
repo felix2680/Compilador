@@ -1,9 +1,13 @@
 package com.analizadores;
 
+import java.util.ArrayList;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AnalizadorLexico {
+
+    private static final ArrayList<Lexema> listaLexemas = new ArrayList<>();
 
     private static final String PALABRAS_RESERVADAS[] = {"int", "float", "String", "char", "double", "else",
         "while", "for", "break", "if", "return", "void"};
@@ -185,5 +189,20 @@ public class AnalizadorLexico {
             }
         }
         return lexema;
+    }
+
+    public static ArrayList<Lexema> analizar(String palabra) {
+        String delimitadores = "\s|\n|\t|(|)|{|}|[|]|;|\"|,|+|-|=";
+        StringTokenizer tokens = new StringTokenizer(palabra, delimitadores, true);
+
+        while (tokens.hasMoreTokens()) {
+            Lexema lexema = new Lexema();
+            lexema = identificarToken(tokens.nextToken(), lexema);
+            // Si se identifica un lexema, agregarlo a la lista de lexemas
+            if (lexema != null) {
+                listaLexemas.add(lexema);
+            }
+        }
+        return listaLexemas;
     }
 }
