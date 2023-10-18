@@ -1,6 +1,6 @@
 package com.clases;
 
-import com.analizadores.VentanaAnalizador;
+import com.GUI.VentanaAnalizador;
 
 public class Main {
 

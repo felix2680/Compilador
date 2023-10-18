@@ -1,4 +1,4 @@
-package com.clases;
+package com.GUI;
 
 import java.awt.*;
 import java.beans.*;

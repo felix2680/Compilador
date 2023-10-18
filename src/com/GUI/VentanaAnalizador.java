@@ -1,7 +1,9 @@
-package com.analizadores;
+package com.GUI;
 
+import com.analizadores.AnalizadorLexico;
+import com.analizadores.AnalizadorSintactico;
+import com.analizadores.Lexema;
 import com.manejadorArchivoTexto.ManejadorArchivo;
-import com.clases.NumeroLinea;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;

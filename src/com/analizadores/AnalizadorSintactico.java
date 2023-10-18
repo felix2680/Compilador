@@ -180,7 +180,7 @@ public class AnalizadorSintactico {
         return (posicion < tokens.size()) ? tokens.get(posicion).getDescripcion() : "";
     }
 
-    class GrammarException extends Exception {
+    public class GrammarException extends Exception {
 
         public GrammarException() {
             super("El código tiene errores sintácticos");
