@@ -52,6 +52,7 @@ public class AnalizadorLexico {
     }
 
     public static Lexema identificarToken(String palabra, Lexema lexema) {
+
         switch (palabra) {
             case "+" -> {
                 lexema.setToken(5);
@@ -194,7 +195,7 @@ public class AnalizadorLexico {
     public static ArrayList<Lexema> analizar(String palabra) {
         String delimitadores = "\s|\n|\t|(|)|{|}|[|]|;|\"|,|+|-|=";
         StringTokenizer tokens = new StringTokenizer(palabra, delimitadores, true);
-        numLinea =0;
+        numLinea = 1;
         while (tokens.hasMoreTokens()) {
             Lexema lexema = new Lexema();
             String token = tokens.nextToken();
@@ -203,8 +204,10 @@ public class AnalizadorLexico {
                 continue;
             }
             lexema = identificarToken(token, lexema);
+
             // Si se identifica un lexema, agregarlo a la lista de lexemas
             if (lexema != null) {
+                lexema.setNumLinea(numLinea);
                 listaLexemas.add(lexema);
             }
         }

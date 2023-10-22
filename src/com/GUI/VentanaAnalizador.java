@@ -9,8 +9,6 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -121,13 +119,11 @@ public class VentanaAnalizador extends JFrame {
                 areaRespuesta.setForeground(Color.red);
                 areaRespuesta.setFont(new Font("Arial", Font.BOLD, 15));
                 areaRespuesta.setText(ex.getMessage());
-            }finally{
+            } finally {
                 AnalizadorSemantico as = new AnalizadorSemantico();
-                try {
-                    as.analizar(listaLexemas);
-                } catch (AnalizadorSemantico.SemanticException ex) {
-                    System.out.println(ex.getMessage());
-                }
+                as.analizar(listaLexemas);
+                as.getErrores();
+
             }
         } else if (e.getSource() == btnLimpiar) {
             eliminarDatosTabla();
@@ -142,7 +138,6 @@ public class VentanaAnalizador extends JFrame {
         // Añade las nuevas filas al modelo
         for (Lexema lexema : lexemas) {
             modeloTabla.addRow(new Object[]{lexema.getLexema(), lexema.getDescripcion(), lexema.getToken()});
-            System.out.println(lexema.getNumLinea());
         }
     }
 
