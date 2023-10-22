@@ -17,9 +17,7 @@ public class AnalizadorSintactico {
         coincidir("Parentesis abierto");
         lista_parametros();
         coincidir("Parentesis cerrado");
-        coincidir("Llave abierta");
-        lista_sentencias();
-        coincidir("Llave cerrada");
+        bloque();
     }
 
     public void tipo_retorno() throws GrammarException {
@@ -34,7 +32,6 @@ public class AnalizadorSintactico {
     public void identificador() throws GrammarException {
         String preanalisis = getPreanalisis();
         if (preanalisis.equals("Identificador")) {
-            System.out.println("Entrando a indentificador");
             coincidir("Identificador");
         } else {
             throw new GrammarException();
@@ -59,7 +56,6 @@ public class AnalizadorSintactico {
     public void tipo_dato() throws GrammarException {
         String preanalisis = getPreanalisis();
         if (preanalisis.equals("Tipo")) {
-            System.out.println("coincidir tipo");
             coincidir("Tipo");
         } else {
             throw new GrammarException();
@@ -71,7 +67,6 @@ public class AnalizadorSintactico {
         while (getPreanalisis().equals("Palabra reservada while")
                 || getPreanalisis().equals("Tipo")
                 || getPreanalisis().equals("Identificador")) {
-            System.out.println("Lista sentencias");
             sentencia();
         }
     }
@@ -81,14 +76,12 @@ public class AnalizadorSintactico {
         String preanalisis = getPreanalisis();
         switch (preanalisis) {
             case "Tipo" -> {
-                System.out.println("entrando a declaracion");
                 declaracion();
             }
             case "Palabra reservada while" -> {
                 estructura_control();
             }
             case "Identificador" -> {
-                System.out.println("Entrando a asignacion");
                 asignacion();
             }
             default -> throw new GrammarException();
@@ -119,7 +112,6 @@ public class AnalizadorSintactico {
     public void constante() throws GrammarException {
         String preanalisis = getPreanalisis();
         if (preanalisis.equals("Número Entero")) {
-            System.out.println("Entrando a numero entero");
             coincidir("Número Entero");
         } else {
             throw new GrammarException();
@@ -127,7 +119,6 @@ public class AnalizadorSintactico {
     }
 
     public void estructura_control() throws GrammarException {
-        System.out.println("Entrando a esturctura de control");
         // Gramática: estructura_control : while
         coincidir("Palabra reservada while");
         coincidir("Parentesis abierto");
@@ -144,7 +135,6 @@ public class AnalizadorSintactico {
 
     public void operador() throws GrammarException {
         String preanalisis = getPreanalisis();
-        System.out.println(preanalisis);
         switch (preanalisis) {
             case "Operador relacional" -> coincidir("Operador relacional");
             case "Operador suma" -> coincidir("Operador suma");

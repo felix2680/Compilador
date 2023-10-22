@@ -4,7 +4,7 @@ public class Lexema {
     private int token;
     private String lexema;
     private String descripcion;
-
+    private int numLinea;
 
     public int getToken() {
         return token;
@@ -30,4 +30,12 @@ public class Lexema {
         this.descripcion = descripcion;
     }
 
+    public int getNumLinea() {
+        return numLinea;
+    }
+
+    public void setNumLinea(int numLinea) {
+        this.numLinea = numLinea;
+    }
+   
 }
