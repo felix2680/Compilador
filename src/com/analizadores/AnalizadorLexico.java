@@ -137,7 +137,7 @@ public class AnalizadorLexico {
             default -> {
                 if (esReservada(palabra)) {
                     switch (palabra) {
-                        case "int", "float", "void" -> {
+                        case "int", "float", "void","char" -> {
                             lexema.setToken(4);
                             lexema.setLexema(palabra);
                             lexema.setDescripcion("Tipo");
