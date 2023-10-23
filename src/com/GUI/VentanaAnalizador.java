@@ -21,9 +21,9 @@ public class VentanaAnalizador extends JFrame {
 
     private ArrayList<Lexema> listaLexemas;
 
-    public final int ANCHO_VENTANA = 855, ALTO_VENTANA = 700;
-    private JTextArea areaCodigo, areaRespuesta;
-    private final JScrollPane scrollAreaCodigo, scrollAreaRespuesta;
+    public final int ANCHO_VENTANA = 855, ALTO_VENTANA = 900;
+    private JTextArea areaCodigo, areaRespuestaSintactico,areaRespuestaSemantico;
+    private final JScrollPane scrollAreaCodigo, scrollAreaRespuestaSintactico,scrollAreaRespuestaSemantico;
     private final JScrollPane scrollTabla;
     private JButton btnAnalizar, btnLimpiar, btnAbrir;
     private final JTable tabla;
@@ -43,15 +43,24 @@ public class VentanaAnalizador extends JFrame {
         scrollAreaCodigo.setRowHeaderView(numLinea);
         add(scrollAreaCodigo);
 
-        areaRespuesta = new JTextArea(10, 35);
-        areaRespuesta.setSize(200, 300);
-        areaRespuesta.setLineWrap(true);
-        areaRespuesta.setEditable(false);
+        areaRespuestaSintactico = new JTextArea(10, 35);
+        areaRespuestaSintactico.setSize(200, 300);
+        areaRespuestaSintactico.setLineWrap(true);
+        areaRespuestaSintactico.setEditable(false);
 
-        scrollAreaRespuesta = new JScrollPane(areaRespuesta);
-        scrollAreaRespuesta.setBounds(420, 450, 370, 200);
-        add(scrollAreaRespuesta);
-
+        scrollAreaRespuestaSintactico = new JScrollPane(areaRespuestaSintactico);
+        scrollAreaRespuestaSintactico.setBounds(420, 450, 370, 200);
+        add(scrollAreaRespuestaSintactico);
+        
+        areaRespuestaSemantico = new JTextArea(10,35);
+        areaRespuestaSintactico.setSize(200, 300);
+        areaRespuestaSintactico.setLineWrap(true);
+        areaRespuestaSintactico.setEditable(false);
+        areaRespuestaSemantico.setForeground(Color.red);
+        areaRespuestaSemantico.setFont(new Font("Arial", Font.BOLD, 15));
+        scrollAreaRespuestaSemantico = new JScrollPane(areaRespuestaSemantico);
+        scrollAreaRespuestaSemantico.setBounds(50, 650,740, 200);
+        add(scrollAreaRespuestaSemantico);
         btnAnalizar = new JButton("ANALIZAR");
         btnAnalizar.setBounds(50, 380, 120, 35);
         btnAnalizar.setIcon(new ImageIcon("src/com/Imagenes/analizando.png"));
@@ -112,23 +121,22 @@ public class VentanaAnalizador extends JFrame {
             try {
                 AnalizadorSintactico a = new AnalizadorSintactico();
                 a.analizar(listaLexemas);
-                areaRespuesta.setForeground(Color.decode("#0e822c"));
-                areaRespuesta.setFont(new Font("Arial", Font.BOLD, 15));
-                areaRespuesta.setText("El codigo es válido");
+                areaRespuestaSintactico.setForeground(Color.decode("#0e822c"));
+                areaRespuestaSintactico.setFont(new Font("Arial", Font.BOLD, 15));
+                areaRespuestaSintactico.setText("El codigo es válido");
             } catch (AnalizadorSintactico.GrammarException ex) {
-                areaRespuesta.setForeground(Color.red);
-                areaRespuesta.setFont(new Font("Arial", Font.BOLD, 15));
-                areaRespuesta.setText(ex.getMessage());
+                areaRespuestaSintactico.setForeground(Color.red);
+                areaRespuestaSintactico.setFont(new Font("Arial", Font.BOLD, 15));
+                areaRespuestaSintactico.setText(ex.getMessage());
             } finally {
                 AnalizadorSemantico as = new AnalizadorSemantico();
                 as.analizar(listaLexemas);
-                as.getErrores();
-
+                areaRespuestaSemantico.setText(as.getErrores().toString());
             }
         } else if (e.getSource() == btnLimpiar) {
             eliminarDatosTabla();
             areaCodigo.setText("");
-            areaRespuesta.setText("");
+            areaRespuestaSintactico.setText("");
         } else if (e.getSource() == btnAbrir) {
             ManejadorArchivo.abrirArchivo();
         }
