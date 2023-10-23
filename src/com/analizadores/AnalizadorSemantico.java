@@ -13,7 +13,7 @@ public class AnalizadorSemantico {
         this.erroresSemanticos = new ArrayList<>();
     }
 
-    public void funcion() {
+    private void funcion() {
         tipo_retorno();
         identificador();
         coincidir("Parentesis abierto");
@@ -22,18 +22,18 @@ public class AnalizadorSemantico {
         bloque();
     }
 
-    public void tipo_retorno() {
+    private void tipo_retorno() {
         String preanalisis = getPreanalisis();
-        int numeroLinea = (posicion < tokens.size()) ? tokens.get(posicion).getNumLinea() : -1;
+        int numeroLinea = getNumeroLinea();
         if (!preanalisis.equals("Tipo")) {
             erroresSemanticos.add(new ErrorSemantico(numeroLinea, "Error semántico: Se esperaba un tipo de retorno."));
         }
         coincidir("Tipo");
     }
 
-    public void identificador() {
+    private void identificador() {
         String preanalisis = getPreanalisis();
-        int numeroLinea = (posicion < tokens.size()) ? tokens.get(posicion).getNumLinea() : -1;
+        int numeroLinea = getNumeroLinea();
         if (!preanalisis.equals("Identificador")) {
             erroresSemanticos.add(new ErrorSemantico(numeroLinea, "Error semántico: Se esperaba un identificador."));
         } else {
@@ -41,7 +41,7 @@ public class AnalizadorSemantico {
         }
     }
 
-    public void lista_parametros() {
+    private void lista_parametros() {
         while (getPreanalisis().equals("Tipo")) {
             parametro();
             if (getPreanalisis().equals("Coma")) {
@@ -50,14 +50,14 @@ public class AnalizadorSemantico {
         }
     }
 
-    public void parametro() {
+    private void parametro() {
         tipo_dato();
         identificador();
     }
 
-    public void tipo_dato() {
+    private void tipo_dato() {
         String preanalisis = getPreanalisis();
-        int numeroLinea = (posicion < tokens.size()) ? tokens.get(posicion).getNumLinea() : -1;
+        int numeroLinea = getNumeroLinea();
         if (!preanalisis.equals("Tipo")) {
             erroresSemanticos.add(new ErrorSemantico(numeroLinea, "Error semántico: Se esperaba un tipo de dato."));
         } else {
@@ -65,7 +65,7 @@ public class AnalizadorSemantico {
         }
     }
 
-    public void lista_sentencias() {
+    private void lista_sentencias() {
         while (getPreanalisis().equals("Palabra reservada while")
                 || getPreanalisis().equals("Tipo")
                 || getPreanalisis().equals("Identificador")) {
@@ -73,9 +73,9 @@ public class AnalizadorSemantico {
         }
     }
 
-    public void sentencia() {
+    private void sentencia() {
         String preanalisis = getPreanalisis();
-        int numeroLinea = (posicion < tokens.size()) ? tokens.get(posicion).getNumLinea() : -1;
+        int numeroLinea = getNumeroLinea();
         switch (preanalisis) {
             case "Tipo" ->
                 declaracion();
@@ -88,15 +88,15 @@ public class AnalizadorSemantico {
         }
     }
 
-    public void declaracion() {
+    private void declaracion() {
         tipo_dato();
         lista_variables();
         coincidir("Punto y coma");
     }
 
-    public void asignacion() {
+    private void asignacion() {
         String preanalisis = getPreanalisis();
-        int numeroLinea = (posicion < tokens.size()) ? tokens.get(posicion).getNumLinea() : -1;
+        int numeroLinea = getNumeroLinea();getNumeroLinea();
         if (preanalisis.equals("Identificador")) {
             coincidir("Identificador");
             coincidir("Operador de asignación");
@@ -107,15 +107,15 @@ public class AnalizadorSemantico {
         }
     }
 
-    public void lista_variables() {
+    private void lista_variables() {
         identificador();
         coincidir("Operador de asignación");
         constante();
     }
 
-    public void constante() {
+    private void constante() {
         String preanalisis = getPreanalisis();
-        int numeroLinea = (posicion < tokens.size()) ? tokens.get(posicion).getNumLinea() : -1;
+        int numeroLinea = getNumeroLinea();
         if (!preanalisis.equals("Número Entero")) {
             erroresSemanticos.add(new ErrorSemantico(numeroLinea, "Error semántico: Se esperaba una constante entera."));
         } else {
@@ -123,7 +123,7 @@ public class AnalizadorSemantico {
         }
     }
 
-    public void estructura_control() {
+    private void estructura_control() {
         coincidir("Palabra reservada while");
         coincidir("Parentesis abierto");
         expresion();
@@ -131,15 +131,15 @@ public class AnalizadorSemantico {
         bloque();
     }
 
-    public void expresion() {
+    private void expresion() {
         identificador();
         operador();
         constante();
     }
 
-    public void operador() {
+    private void operador() {
         String preanalisis = getPreanalisis();
-        int numeroLinea = (posicion < tokens.size()) ? tokens.get(posicion).getNumLinea() : -1;
+        int numeroLinea = getNumeroLinea();
         if (!preanalisis.equals("Operador relacional") && !preanalisis.equals("Operador suma")) {
             erroresSemanticos.add(new ErrorSemantico(numeroLinea, "Error semántico: Operador no válido."));
         } else {
@@ -147,7 +147,7 @@ public class AnalizadorSemantico {
         }
     }
 
-    public void bloque() {
+    private void bloque() {
         coincidir("Llave abierta");
         lista_sentencias();
 
@@ -159,15 +159,26 @@ public class AnalizadorSemantico {
         }
     }
 
-    public void coincidir(String cadena) {
-        int numeroLinea = (posicion < tokens.size()) ? tokens.get(posicion).getNumLinea() : -1;
+    private void coincidir(String cadena) {
+        int numeroLinea = getNumeroLinea();
         if (posicion < tokens.size() && cadena.equals(tokens.get(posicion).getDescripcion())) {
             posicion++;
         } else {
-            erroresSemanticos.add(new ErrorSemantico(numeroLinea, "Error semántico: No coincide con '" + cadena + "'."));
+            erroresSemanticos.add(new ErrorSemantico(numeroLinea, "Error semántico: Falta '" + cadena + "'."));
         }
     }
-
+    
+    private int getNumeroLinea(){
+        if(posicion < tokens.size() && posicion > 0){
+            if(tokens.get(posicion).getNumLinea() > tokens.get((posicion-1)).getNumLinea()){
+                return tokens.get((posicion-1)).getNumLinea();
+            }else{
+               return tokens.get(posicion).getNumLinea();
+            }
+        }else{
+            return tokens.get(posicion).getNumLinea();
+        }
+    }
     public void analizar(ArrayList<Lexema> tokens) {
         this.tokens = tokens;
         funcion();
@@ -181,15 +192,6 @@ public class AnalizadorSemantico {
         for (ErrorSemantico error : erroresSemanticos) {
             System.out.println("Línea " + error.getNumeroLinea() + ": " + error.getMensaje());
         }
-    }
-
-    public static void main(String[] args) {
-        // Ejemplo de uso
-        ArrayList<Lexema> tokens = new ArrayList<>();
-        // Agregar tokens al ArrayList tokens
-        AnalizadorSemantico analizador = new AnalizadorSemantico();
-        analizador.analizar(tokens);
-        analizador.getErrores();
     }
 }
 
