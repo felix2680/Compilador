@@ -188,10 +188,15 @@ public class AnalizadorSemantico {
         return (posicion < tokens.size()) ? tokens.get(posicion).getDescripcion() : "";
     }
 
-    public void getErrores() {
+    public StringBuilder getErrores() {
+        StringBuilder listaErrores = new StringBuilder();
+        
         for (ErrorSemantico error : erroresSemanticos) {
-            System.out.println("Línea " + error.getNumeroLinea() + ": " + error.getMensaje());
+            listaErrores.append("Línea ").append(error.getNumeroLinea())
+                    .append(": ").append(error.getMensaje()).append("\n");
         }
+        
+        return listaErrores;
     }
 }
 
