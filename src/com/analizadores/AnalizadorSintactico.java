@@ -111,10 +111,10 @@ public class AnalizadorSintactico {
 
     public void constante() throws GrammarException {
         String preanalisis = getPreanalisis();
-        if (preanalisis.equals("Número Entero")) {
-            coincidir("Número Entero");
-        } else {
-            throw new GrammarException();
+        switch (preanalisis) {
+            case "Número Entero" -> coincidir("Número Entero");
+            case "Número Real" -> coincidir("Número Real");
+            default -> throw new GrammarException();
         }
     }
 
