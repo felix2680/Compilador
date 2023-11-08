@@ -135,9 +135,7 @@ public class AnalizadorSemantico {
     private void lista_variables() {
         String nombreVariable = tokens.get(posicion).getLexema();
         String tipoDato = tokens.get(posicion - 1).getLexema();
-
         coincidir("Identificador");
-
         if (!variablesDeclaradas.containsKey(nombreVariable)) {
             variablesDeclaradas.put(nombreVariable, getNumeroLinea());
             variablesNoUtilizadas.add(nombreVariable);
@@ -165,6 +163,7 @@ public class AnalizadorSemantico {
             coincidir(preanalisis);
         } else {
             erroresSemanticos.add(new ErrorSemantico(numeroLinea, "Error semántico: Tipo de dato incompatible."));
+            posicion++;
         }
     }
 
