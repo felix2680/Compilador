@@ -133,12 +133,11 @@ public class AnalizadorSemantico {
     }
 
     private void lista_variables() {
-
         String nombreVariable = tokens.get(posicion).getLexema();
         String tipoDato = tokens.get(posicion - 1).getLexema();
-        System.out.println(tipoDato);
+
         coincidir("Identificador");
-        // Agregar la variable a la tabla de símbolos
+
         if (!variablesDeclaradas.containsKey(nombreVariable)) {
             variablesDeclaradas.put(nombreVariable, getNumeroLinea());
             variablesNoUtilizadas.add(nombreVariable);
@@ -148,8 +147,10 @@ public class AnalizadorSemantico {
             erroresSemanticos.add(new ErrorSemantico(numeroLinea, "Error semántico: Variable '" + nombreVariable + "' ya ha sido declarada previamente."));
         }
 
-        coincidir("Operador de asignación");
-        constante();
+        if (getPreanalisis().equals("Operador de asignación")) {
+            coincidir("Operador de asignación");
+            constante();
+        }
     }
 
     private void constante() {
@@ -183,6 +184,7 @@ public class AnalizadorSemantico {
         }
         operador();
         constante();
+        variablesNoUtilizadas.remove(nombreVariable);
     }
 
     private void operador() {

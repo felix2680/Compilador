@@ -105,8 +105,10 @@ public class AnalizadorSintactico {
 
     public void lista_variables() throws GrammarException {
         identificador();
-        coincidir("Operador de asignación");
-        constante();
+        if (getPreanalisis().equals("Operador de asignación")) {
+            coincidir("Operador de asignación");
+            constante();
+        }
     }
 
     public void constante() throws GrammarException {
